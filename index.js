@@ -152,6 +152,19 @@ function updateChildren (newNode, oldNode) {
       }
     }
   }
+
+  replaceLeakedProxies(oldNode);
+}
+
+function replaceLeakedProxies(node) {
+  // leaked proxy fix (see: https://github.com/choojs/nanocomponent/issues/65)
+  if (!node.querySelectorAll) {
+    return;
+  }
+  let leakedProxies = node.querySelectorAll('[data-proxy]');
+  for (let proxy of leakedProxies) {
+    proxy.replaceWith(proxy.realNode);
+  }
 }
 
 function same (a, b) {
